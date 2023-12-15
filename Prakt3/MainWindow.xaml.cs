@@ -54,20 +54,25 @@ namespace Prakt3
 
         private void btnFill_Click(object sender, RoutedEventArgs e)
         {
-            bool f1 = Int32.TryParse(tbRowCount.Text, out int rowCount), // Получаем количество рядов в матрице
-                f2 = Int32.TryParse(tbColumnCount.Text, out int columnCount); // Получаем количество колонок в матрице
-
-            if (f1 && f2 && rowCount >= 0 && columnCount >= 0)
+            try
             {
-                matr = Arrays.Fill(rowCount, columnCount);
-                dataGridMatr.ItemsSource = VisualArray.ToDataTable(matr).DefaultView; // Выводим матрицу на форму
+                int rowCount = Convert.ToInt32(tbRowCount.Text);
+                int columnCount = Convert.ToInt32(tbColumnCount.Text);
+                if (rowCount >= 0 && columnCount >= 0)
+                {
+                    matr = Arrays.Fill(rowCount, columnCount);
+                    dataGridMatr.ItemsSource = VisualArray.ToDataTable(matr).DefaultView; // Выводим матрицу на форму
+                }
             }
-            else MessageBox.Show("Введите правильные значения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            catch
+            {
+                MessageBox.Show("Введите правильные значения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void btnCalc_Click(object sender, RoutedEventArgs e)
         {
-            if (matr != null)
+            try
             {
                 tbRez.Clear();
 
@@ -75,7 +80,14 @@ namespace Prakt3
                 for (int i = 0; i < result.Length; i++)
                     tbRez.Text += $"C{i + 1}={result[i]}  ";
             }
-            else MessageBox.Show("Создайте таблицу", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            catch (NullReferenceException)
+            {
+                MessageBox.Show("Создайте таблицу", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch
+            {
+                MessageBox.Show("Что-то пошло не так", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
